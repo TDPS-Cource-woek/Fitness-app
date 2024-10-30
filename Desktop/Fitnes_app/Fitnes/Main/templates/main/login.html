@@ -1,0 +1,48 @@
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main/css/forms.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="{% static 'main/css/login.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="{% static 'main/css/styles.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap">
+<body>
+    <div class="page-wrapper">
+        <div class="container-log">
+            <div class="form-container">
+                <form method="post" class="login-form">
+                    <div class="text-wrapper">
+                        <h2>АВТОРИЗАЦИЯ</h2>
+                    </div>
+                    <div class="error-container">
+                        {{ form.errors }}
+                    </div>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <a class="btn-forgot" href="{% url 'password_reset' %}" >Забыли пароль?</a>
+                    <div class="button-wrapper">    
+                        <button type="submit">Войти</button>
+                    </div>
+                </form>
+                <div class="login-text">
+                    <div class="text1-wrapper">
+                        <div class=logo>
+                            <img src="{% static 'main/img/name1.png' %}" alt="logo" class="cta-img">
+                        </div>
+                        <p>Добро пожаловать! Пожалуйста, введите свои учетные данные, чтобы войти в систему. Если у вас нет учетной записи, пожалуйста, зарегистрируйтесь.</p>
+                    </div>
+                    <div class="button-wrapper">
+                        <p class="text-button">Зарегистрироваться</p>
+                        <a class="btn btn-next" href="{% url 'register' %}">
+                            <img src="{% static 'main/img/next.png' %}" alt="Register">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+  </body>
+</html>

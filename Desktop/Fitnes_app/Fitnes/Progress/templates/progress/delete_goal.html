@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/styles.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="{% static 'progress/css/forms.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="{% static 'progress/css/delete_goal.css' %}" type="text/css" media="all">
+<body>
+  <div class="page-wrapper">
+    <div class="container-log">
+      <form action="" method="post" class="edit-form">
+        <div class="container-title">
+          <h2 class="title-h3">Вы уверены, что хотите удалить:</h2>
+          <h2 class="title-h3">"{{ goal.description }}"?</h2>
+        </div>
+        {% csrf_token %}
+        <div class="container-button">
+          <input type="submit" value="Подтвердить" class="submit">
+          <a class="btn btn-light" href="{% url 'index-progress' %}">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+{% endblock %}

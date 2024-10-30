@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'progress/css/weight_tracking.css' %}" type="text/css" media="all">
+
+    <body>
+        <div class="page-wrapper">
+            <h1>Обновить текущий вес</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-wrapper">{{ form.as_p }}</div>
+                <div class="btn-wrapper"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+            </form>
+            <div class="container-text">
+                {% if active_goal %}
+                    <div class="container-text-1">
+                        <div class="container-first">
+                            <p>Начальный вес:</p>
+                            <div class="container-weight-1">{{ active_goal.start_weight }}</div>
+                        </div>
+                        <div class="container-second">
+                            <p>Желаемый вес:</p>
+                            <div class="container-weight-2">{{ active_goal.target_weight }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Нет цели</p>
+                {% endif %}
+                <p>Осталось: {{for_goal_left|floatformat:1}}</p>
+            </div>
+            
+            <div class="container-graph">{{ weight_chart_data|safe }}</div>
+        </div>
+    </body>
+{% endblock %}
