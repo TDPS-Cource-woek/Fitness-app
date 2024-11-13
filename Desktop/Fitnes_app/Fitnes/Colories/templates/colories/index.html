@@ -76,6 +76,7 @@
         </tr>
   </table>
 
+  <div class="main-content">
   <!--Завтра-Ужин + Вода + Тренировки + Сон-->
   <div class="left-section">
     <div class="container">
@@ -164,7 +165,7 @@
   </div>
 
   <p><a class="btn-primary" href="{%url 'meal_record_read' %}" style="color:brown">Посмотреть всю еду</a></p>
-
+  
   <!--Диаграмма + данные-->
   <div class="right-section">
     <div class="summary">
@@ -183,17 +184,25 @@
               <div style="color: rgb(93, 161, 48);">Жиры: <span id="fatPercent">{{ fat_percent|floatformat:1 }}</span>%</div>
               <div style="color: rgb(36, 56, 23);">Углеводы: <span id="carbPercent">{{ carb_percent|floatformat:1 }}</span>%</div>
             </div>
-        </div>
-        <!-- Pie chart here -->
-        
-        <div class="chart">
-          
-          <a class="btn-info" href="{%url 'colory_dynamic' %}" style="color:brown">На страницу с графиками колорий</a>
+        </div> 
+      </div>
     </div>
 
-    <div class="container_message" id="container_message"></div>
+    <div class="right-right-section">  <!-- Summary section -->
+      <div class="chart">
+        {{chart|safe}}
+            <a class="btn-info" href="{%url 'colory_dynamic' %}" style="color:brown">На страницу с графиками колорий</a>
+          <!-- ... (hidden inputs and details) ... -->
+      </div>
   </div>
-  {{chart|safe}}
+  
+  <div class="message-section"> <!-- Message section below right sections -->
+    <div class="container_message" id="container_message"></div>
+</div>
+</div>
+            
+  
+
   <!--Нужна нормальная верстка, я не умею во фронт... :-)   -->
   <!--Обработка календаря-->
   <script>

@@ -57,14 +57,13 @@ a {
   }
 
 .logout {
-    margin-left: 600px;
-    color: #333;
+    margin-left: 100px;
     color: #333;
     justify-content: right;
 }
 
 .logout:hover {
-    margin-left: 600px;
+    margin-left: 100px;
     color: #5DA130;
     text-decoration: none;
     justify-content: right;

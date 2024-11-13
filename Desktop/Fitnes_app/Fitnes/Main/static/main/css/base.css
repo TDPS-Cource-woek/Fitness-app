@@ -24,10 +24,11 @@
 }
 
 .logout {
+    
     margin-left: 600px;
     color: white;
     color: white;
-    justify-content: right;
+    justify-content: left;
 }
 
 .logout:hover {

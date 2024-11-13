@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, date
 from Profiles.models import UserCaloryProfile
 from django.urls import reverse
 import plotly.express as px # type: ignore
-
+from django.utils import timezone
 
 def colory_dynamic(request):
     user_id = request.user.id
@@ -202,10 +202,13 @@ def macronutrient_chart(request, user_id, proteins_sum, fats_sum, carbs_sum):
                                   showlegend=False,
                                   textinfo='none')]) 
     fig.update_layout(
+        margin=dict(l=0, r=0, b=0, t=0),
         paper_bgcolor="#f0f0f0",  # Цвет фона графика
-        plot_bgcolor="#f0f0f0"  # Цвет области графика
+        plot_bgcolor="#f0f0f0",  # Цвет области графика
+        width=200,  # Ширина в пикселях
+        height=200
     )
-    chart = fig.to_html()
+    chart = fig.to_html(config={'responsive': False})
     
     return chart
 
@@ -269,7 +272,14 @@ def meal_record_create(request):
 
 @login_required
 def meal_records_read(request):
-    meal_records = MealRecord.objects.filter(user=request.user)
+    today = timezone.now().date()
+    tomorrow = today + timedelta(days=1) 
+    meal_records = MealRecord.objects.filter(
+        user=request.user, 
+        meal_time__gte=today,  # Greater than or equal to today
+        meal_time__lt=tomorrow # Less than tomorrow (i.e., before tomorrow starts)
+    ).order_by('-meal_time')
+
     context = {
         'title': 'Список записей о приёмах пищи',
         'meal_records': meal_records,

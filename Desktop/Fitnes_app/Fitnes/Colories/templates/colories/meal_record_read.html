@@ -1,19 +1,24 @@
-<!-- colories/templates/colories/meal_records_read.html -->
 {% extends "main/base.html" %}
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'colories/css/meal_record_read.css' %}">
+
 <div class="container">
     <h2>{{ title }}</h2>
-    <ul>
+    <div class="record-list">  <!-- Use a div instead of ul -->
         {% for record in meal_records %}
-            <li>
-                {{ record.product.name }} - {{ record.measure }} {{ record.product.measurement_unit }} ({{ record.category }})
-                <a href="{% url 'meal_record_update' record.id %}">Редактировать</a>
-                <a href="{% url 'meal_record_delete' record.id %}">Удалить</a>
-            </li>
+            <div class="record-item">  <!-- Use a div instead of li -->
+                <div class="record-content">
+                    {{ record.product.name }} - {{ record.measure }} {{ record.product.measurement_unit }} ({{ record.category }})
+                </div>
+                <div class="record-actions">
+                    <a href="{% url 'meal_record_update' record.id %}">Редактировать</a>
+                    <a href="{% url 'meal_record_delete' record.id %}">Удалить</a>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 </div>
-<a class="btn-primary" href="{%url 'index-colories' %}">На главную страницу колорий</a>
+<a class="btn-primary" href="{%url 'index-colories' %}">На главную страницу калорий</a>
 {% endblock %}
