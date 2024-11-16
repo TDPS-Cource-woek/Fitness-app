@@ -8,6 +8,8 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm, LoginForm, PasswordResetForm
 from django.contrib.auth.hashers import make_password
+from Profiles.models import UserCaloryProfile, Profile
+from django.urls import reverse
 
 class A:
     x = 1
@@ -40,13 +42,26 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('profile')
+            print("Форма валидна")  # Отладка
+            user = form.save(commit=False)
+            user.password = make_password(form.cleaned_data.get('password1'))
+            user.save()
+            print("Пользователь сохранен", user.username)  # Отладка
+
+            auth_login(request, user)
+            UserCaloryProfile.objects.create(user=user) # Создаем профиль калорий
+             #создаем профиль обычного пользователя
+            user_type = form.cleaned_data.get('type')
+            if user_type == 'expert':
+                Profile.objects.create(user=user,type='expert')
+                return redirect('create_expert_profile')
+            else:
+                Profile.objects.create(user=user,type='user')
+                return redirect(reverse('profile_edit'))
+            
+            
+        else:
+            print("Ошибки формы:", form.errors) # Отладка
     else:
         form = RegistrationForm()
     context = {

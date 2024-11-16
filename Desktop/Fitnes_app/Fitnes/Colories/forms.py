@@ -1,11 +1,15 @@
 # colories/forms.py
 from django import forms
-from .models import MealRecord, TimeTable
+from .models import MealRecord, TimeTable,Product
 
 class MealRecordFormForCreate(forms.ModelForm):
     class Meta:
         model = MealRecord
-        fields = ['product', 'measure',]
+        fields = ['product', 'measure']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.exclude(name__iexact='Вода') # Исключаем воду
 
 class MealRecordFormForEdit(forms.ModelForm):
     class Meta:

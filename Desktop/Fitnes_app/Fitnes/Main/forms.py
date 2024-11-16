@@ -76,7 +76,7 @@ class RegistrationForm(UserCreationForm):
         ('user', 'User'),
         ('expert', 'Expert'),
     ]
-    type = forms.ChoiceField(choices=USER_TYPE_CHOICES, label='')
+    type = forms.ChoiceField(choices=USER_TYPE_CHOICES, label='Тип пользователя')
 
     class Meta:
         model = User

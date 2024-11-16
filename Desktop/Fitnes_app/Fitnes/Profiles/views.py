@@ -9,6 +9,8 @@ from django.forms import modelformset_factory
 from Activity.models import TrainingSession
 from Activity.forms import TrainingSessionForm
 from Progress.models import UserAchievement, UserRating, GlobalRating
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 @login_required
 def create_expert_profile(request):
@@ -30,7 +32,7 @@ def edit_expert_profile(request, pk):
         form = ExpertProfileForm(request.POST, instance=expert_profile)
         if form.is_valid():
             form.save()
-            return redirect('profiles/view_expert_profile', pk=expert_profile.pk)
+            return redirect(reverse('view_expert_profile', kwargs={'pk': pk}))
     else:
         form = ExpertProfileForm(instance=expert_profile)
     return render(request, 'profiles/expert_profile_form.html', {'form': form})
@@ -125,21 +127,10 @@ def profile_create(request):
 
 @login_required
 def profile(request):
-    try:
-        profile = request.user.profile
-    except Profile.DoesNotExist:
-        profile = Profile.objects.create(user=request.user)
+    profile = get_object_or_404(Profile, user=request.user) # Используем get_object_or_404
 
-    try:
-        calory_profile = request.user.calory_profile
-    except UserCaloryProfile.DoesNotExist:
-        calory_profile = None
-    
-    try:
-        expert = request.user.expert_profile
-    except Profile.DoesNotExist:
-        expert = None
-
+    calory_profile = getattr(request.user, 'calory_profile', None)
+    expert = getattr(request.user, 'expert_profile', None)
     user = request.user
     active_goal = Goal.objects.filter(user=user, status__in=['New', 'In_work']).order_by('-start_date').first()
     # Подсчет выполненных достижений

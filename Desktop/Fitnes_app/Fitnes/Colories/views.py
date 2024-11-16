@@ -37,6 +37,36 @@ def colory_dynamic(request):
 
 def create_selections(user):
     pass
+def water_intake_chart(user, selected_date):
+    daily_goal = 2000  # Get the user's goal
+    
+    water_records = MealRecord.objects.filter(
+        user=user, 
+        meal_time__date=selected_date,
+        product__name__iexact='Вода'  # Case-insensitive comparison
+    )
+    
+    total_water_intake = sum(record.measure for record in water_records)
+    remaining_water = daily_goal - total_water_intake
+
+    fig = go.Figure(data=[
+        go.Bar(name="Выпито", y=["Вода"], x=[total_water_intake],showlegend=False,orientation='h'),
+        go.Bar(name="Осталось", y=["Вода"], x=[max(0, remaining_water)],showlegend=False,orientation='h') # Ensure remaining is not negative
+    ])
+
+    fig.update_layout(
+        title="Потребление воды",
+        barmode='stack',
+        width=500,      # Установите желаемую ширину (в пикселях)
+        height=200  # Stack the bars for better visualization
+    )
+    
+    fig.update_layout(
+        paper_bgcolor="#f0f0f0",  # Цвет фона графика
+        plot_bgcolor="#f0f0f0"  # Цвет области графика
+    )
+    
+    return fig.to_html()
 
 @login_required
 def index(request):
@@ -75,7 +105,7 @@ def index(request):
 
         # Получение дневной нормы калорий через метод класса
         needed = UserCaloryProfile.per_day_calories(request.user)
-
+        water_chart = water_intake_chart(request.user, selected_date)
         context = {
             'title': 'Страница для учёта Ваших калорий',
             'message': 'Вы находитесь на главной странице Colories',
@@ -99,7 +129,8 @@ def index(request):
             'needed': needed,
             'ostatok': needed - calories_sum,
             'selected_date': selected_date.strftime("%Y-%m-%d"),
-            'chart': chart
+            'chart': chart,
+            'water_chart': water_chart
         }
     else:
         context = {

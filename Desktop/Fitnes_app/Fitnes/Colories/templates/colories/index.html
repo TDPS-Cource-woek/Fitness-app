@@ -142,21 +142,11 @@
           </form>
       </div>
     </div>
-    <div class="container">
-        <div class="food-entry workout">
-            <div class="label">Активность</div>
-            <div class="value" id="calories">0</div>
-            <form action="{% url 'meal_record_create' %}" method="get">
-                <button class="button_colories" type="submit">+</button>
-            </form>
-        </div>
-    </div>
+    
     <div class="container">
       <div class="food-entry sleep">
           <div class="label">Сон</div>
           <div class="value" id="hours">{{sleep_hours}}:{{sleep_minutes}}</div>
-          <div class="value">0</div>
-          <div class="value" id="calories">ККал</div>
           <form action="{% url 'sleep_record_create' %}" method="get">
               <button class="button_colories" type="submit">+</button>
           </form>
@@ -198,6 +188,7 @@
   
   <div class="message-section"> <!-- Message section below right sections -->
     <div class="container_message" id="container_message"></div>
+    {{ water_chart|safe }}
 </div>
 </div>
             

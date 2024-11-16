@@ -10,7 +10,7 @@
         <div class="form-container">
             <form method="post" class="login-edit">
                 <div class="text-wrapper">
-                    <h2>Редактирование профиля калорий</h2>
+                    <h2>Редактирование данных</h2>
                 </div>
                 <div class="form-wrapper">
                     <div class="container-first">
@@ -50,7 +50,7 @@
             </form>
             <div class="login-text">
                 <div class="text1-wrapper">
-                    <p>СУПЕР ДУПЕР ИКОНКА</p>
+                    
                     <p>Добро пожаловать! Пожалуйста, введите свои учетные данные, чтобы войти в систему. Если у вас нет учетной записи, пожалуйста, зарегистрируйтесь.</p>
                 </div>
             </div>
@@ -59,50 +59,52 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var formsetContainer = document.getElementById('formset-container');
-        var addFormButton = document.getElementById('add-form');
-        var totalForms = document.getElementById('id_form-TOTAL_FORMS');
-        var formCount = formsetContainer.children.length;
-    
-        addFormButton.addEventListener('click', function() {
-            var newForm = formsetContainer.children[0].cloneNode(true);
-            var formRegex = new RegExp('form-(\\d+)', 'g');
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, 'form-' + formCount);
-            newForm.querySelectorAll('input, select').forEach(function(input) {
-                input.value = '';  // Очистка значений
-                if (input.name.includes('DELETE')) {
-                    input.checked = false;  // Сброс значения поля DELETE
-                }
-            });
-            formsetContainer.appendChild(newForm);
-            formCount++;
-            totalForms.value = formCount;
-    
-            attachRemoveButtonHandlers();
-        });
-    
-        function attachRemoveButtonHandlers() {
-            var removeButtons = document.querySelectorAll('.remove-form');
-            removeButtons.forEach(function(button) {
-                button.removeEventListener('click', handleRemoveButtonClick);  // Удаление старых обработчиков
-                button.addEventListener('click', handleRemoveButtonClick);
-            });
-        }
-    
-        function handleRemoveButtonClick() {
-            var formItem = this.closest('.formset-item');
-            formItem.style.display = 'none';
-            var deleteInput = formItem.querySelector('input[name$="-DELETE"]');
-            if (deleteInput) {
-                deleteInput.checked = true;  // Установка значения поля DELETE
+   document.addEventListener('DOMContentLoaded', function() {
+    var formsetContainer = document.getElementById('container-fourth'); 
+    var addFormButton = document.getElementById('add-form');
+    var totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
+
+    addFormButton.addEventListener('click', function() {
+        var newForm = formsetContainer.querySelectorAll('.formset-item')[0].cloneNode(true);
+        var formRegex = new RegExp('form-(\\d+)-', 'g');
+        var formCount = formsetContainer.querySelectorAll('.formset-item').length;
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, 'form-' + formCount + '-');
+
+        newForm.querySelectorAll('input, select').forEach(function(input) {
+            input.value = '';
+            if (input.name.includes('DELETE')) {
+                input.checked = false;
             }
-            formCount--;
-            totalForms.value = formCount;
-        }
-    
-        attachRemoveButtonHandlers();  // Привязываем обработчики сразу после загрузки страницы
+        });
+
+        formsetContainer.appendChild(newForm);
+        totalFormsInput.value = parseInt(totalFormsInput.value) + 1;
+
+        attachRemoveButtonHandlers();
     });
+
+    function attachRemoveButtonHandlers() {
+        var removeButtons = document.querySelectorAll('.remove-form');
+        removeButtons.forEach(function(button) {
+            button.removeEventListener('click', handleRemoveButtonClick);
+            button.addEventListener('click', handleRemoveButtonClick);
+        });
+    }
+
+    function handleRemoveButtonClick() {
+        var formItem = this.closest('.formset-item');
+        formItem.style.display = 'none';
+        var deleteInput = formItem.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+            deleteInput.checked = true;
+        }
+
+        totalFormsInput.value = parseInt(totalFormsInput.value) - 1;
+
+    }
+
+    attachRemoveButtonHandlers();
+});
 </script>
 
 {% endblock %}

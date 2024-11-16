@@ -27,7 +27,7 @@ class UserCaloryProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='calory_profile')
     birthdate = models.DateField(default='2010-01-01')
     gender = models.CharField(max_length=10)
-    height = models.FloatField()  # Height in centimeters
+    height = models.FloatField(default=170)  # Height in centimeters
     current_weight = models.FloatField(default=50)  # Текущий вес
     activity_level = models.CharField(max_length=20, choices=ACTIVITY_LEVEL_CHOICES)
 
