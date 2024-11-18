@@ -44,6 +44,16 @@ a {
     padding: 20px; 
 }
 
+.right-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.right-up-container{
+    display: flex;
+    flex-direction: row;
+}
+
 .right-section {
     width: 25%; 
     background-color: #f0f0f0;
@@ -68,6 +78,10 @@ a {
     flex-direction: column; /*  вертикальное расположение элементов  */
     align-items: center;    /*  центрируем элементы по горизонтали  */
     padding: 20px; 
+}
+
+.message-container{
+    display: flex;
 }
 
 .message-section {

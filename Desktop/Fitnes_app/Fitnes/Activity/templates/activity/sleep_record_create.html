@@ -15,7 +15,7 @@
                 <form action="{% url 'sleep_record_create' %}" method="post" class="sleep-form">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Создать запись о сне</button>
+                    <button type="submit" class="button-submit-sleep">Создать запись о сне</button>
                 </form>    
             {% endif %}
             <a href="{% url 'index-colories' %}" class="back-link">Вернуться</a>
