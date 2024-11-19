@@ -88,7 +88,11 @@
             <h4>Динамика изменения веса</h4>
             </div>
             <div class="nutrition-content">
-                <button class="cta-btn">Попробовать</button>
+              {% if user.is_authenticated %}
+              <a href="/colories/" class="hero-btn">Попробовать</a>
+            {% else %}
+                <a href="/fitnes/login/" class="hero-btn">Попробовать</a>
+            {% endif %}
             </div>
           </div>
         </div>
@@ -104,7 +108,11 @@
             <h4>Анализ самого важного</h4>
             </div>
             <div class="nutrition-content">
-                <button class="cta-btn">Попробовать</button>
+              {% if user.is_authenticated %}
+              <a href="/colories/" class="hero-btn">Попробовать</a>
+            {% else %}
+                <a href="/fitnes/login/" class="hero-btn">Попробовать</a>
+            {% endif %}
             </div>
           </div>
         </div>
