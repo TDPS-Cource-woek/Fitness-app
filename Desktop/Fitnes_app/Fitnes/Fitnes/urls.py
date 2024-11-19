@@ -29,3 +29,4 @@ urlpatterns = [
     path('progress/', include('Progress.urls')),
     path('fitnes/', include('Main.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

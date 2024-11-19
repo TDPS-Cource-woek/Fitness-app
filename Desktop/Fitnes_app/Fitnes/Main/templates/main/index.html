@@ -258,27 +258,51 @@
       
       <ul class="nav__ul nav__ul--extra">
         <li>
-          <a href="#">Счетчик калорий</a>
+          {% if user.is_authenticated %}
+              <a href="/colories/">Счетчик калорий</a>
+            {% else %}
+                <a href="/fitnes/login/">Счетчик калорий</a>
+            {% endif %}
         </li>
         
         <li>
-          <a href="#">Видео-тренировки</a>
+          {% if user.is_authenticated %}
+              <a href="/expertise/">Видео-тренировки</a>
+            {% else %}
+                <a href="/fitnes/login/">Видео-тренировки</a>
+            {% endif %}
         </li>
         
         <li>
-          <a href="#">Советы по питанию</a>
+          {% if user.is_authenticated %}
+              <a href="/colories/">Советы по питанию</a>
+            {% else %}
+                <a href="/fitnes/login/">Советы по питаниюм</a>
+            {% endif %}
         </li>
         
         <li>
-          <a href="#">Соревнования</a>
+          {% if user.is_authenticated %}
+              <a href="/progress/">Соревнования</a>
+            {% else %}
+                <a href="/fitnes/login/">Соревнования</a>
+            {% endif %}
         </li>
         
         <li>
-          <a href="#">Награды</a>
+          {% if user.is_authenticated %}
+              <a href="/progress/">Награды</a>
+            {% else %}
+                <a href="/fitnes/login/">Награды</a>
+            {% endif %}
         </li>
         
         <li>
-          <a href="#">Отслеживание целей</a>
+          {% if user.is_authenticated %}
+              <a href="/progress/">Отслеживание целей</a>
+            {% else %}
+                <a href="/fitnes/login/">Отслеживание целей</a>
+            {% endif %}
         </li>
       </ul>
     </li>
