@@ -1,8 +1,4 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+
 
 body {
     font-family: Arial, sans-serif;
@@ -230,4 +226,44 @@ h3 {
 
 .day.today {
     border: 4px solid #f00; /* Красная рамка для выделения текущего дня */
+}
+
+#sidebar .timetable-list {  /* Добавили #sidebar */
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#sidebar .timetable-item { /* Добавили #sidebar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: #f9efd2;
+    margin-bottom: 10px;
+}
+
+#sidebar .timetable-content { /* Добавили #sidebar */
+    font-weight: bold;
+}
+
+#sidebar .timetable-actions { /* Добавили #sidebar */
+    display: flex;
+    gap: 10px;
+}
+
+#sidebar .edit-button,
+#sidebar .delete-button { /* Добавили #sidebar */
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    background-color: #8edd588e;
+    color: rgb(22, 58, 36);
+}
+
+#sidebar .edit-button:hover,
+#sidebar .delete-button:hover { /* Добавили #sidebar */
+    background-color: #0e4128;
 }

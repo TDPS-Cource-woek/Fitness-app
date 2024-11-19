@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+import json
 
 #from tasks.models import Profile, Task
 
@@ -21,14 +22,27 @@ def expert_timetable_list(request):
     # Получаем профиль эксперта, связанный с текущим пользователем
     expert_profile = ExpertProfile.objects.get(user=request.user)
     timetables = ExpertTimetable.objects.filter(expert=expert_profile)
+    
     try:
         expert = request.user.expert_profile
     except Profile.DoesNotExist:
         expert = None
+    timetable_data = []
+    for timetable in timetables:
+        timetable_data.append({
+            'pk': timetable.pk,
+            'day_of_week': timetable.day_of_week,
+            'student': str(timetable.student),
+            'start_time': timetable.start_time.strftime('%H:%M'),
+            'end_time': timetable.end_time.strftime('%H:%M'),
+        })
+    print(timetable_data)
+
     context = {
         'title': 'Расписание тренера',
         'timetables': timetables,
-        'expert': expert
+        'expert': expert,
+        'timetable_data_json': json.dumps(timetable_data), # Pass data as JSON
     }
     return render(request, 'expertise/expert_timetable_list.html', context)
 
@@ -39,9 +53,16 @@ def expert_timetable_create(request):
         form = ExpertTimetableForm(request.POST)
         if form.is_valid():
             timetable = form.save(commit=False)
-            timetable.expert = request.user
-            timetable.save()
-            return redirect('timetable_list')
+            
+            try:
+                expert_profile = request.user.expert_profile # Получаем ExpertProfile
+                timetable.expert = expert_profile            # Присваиваем ExpertProfile
+                timetable.save()
+                return redirect('timetable_list')
+            except ExpertProfile.DoesNotExist:
+                # Обработка случая, когда у пользователя нет ExpertProfile
+                # Например, можно перенаправить на страницу создания профиля эксперта
+                return redirect('create_expert_profile')
     else:
         form = ExpertTimetableForm()
     context = {

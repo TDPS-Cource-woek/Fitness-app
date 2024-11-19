@@ -14,15 +14,8 @@
     <div class="btn">
     <a href="{% url 'timetable_create' %}" class="btn btn-primary">Добавить расписание</a>
     </div>
-    <ul>
-    {% for timetable in timetables %}
-    <li>
-        <a href="{% url 'timetable_detail' timetable.pk %}">{{ timetable.expert }} - {{ timetable.day_of_week }}: {{ timetable.start_time }} - {{ timetable.end_time }}</a>
-        <a href="{% url 'timetable_update' timetable.pk %}">Редактировать</a>
-        <a href="{% url 'timetable_delete' timetable.pk %}">Удалить</a>
-    </li>
-    {% endfor %}
-    </ul>
+    
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="{% static 'main/css/styles.css' %}" type="text/css" media="all">
     <link rel="stylesheet" href="{% static 'expertise/css/expert_timetable_list.css' %}">
@@ -66,7 +59,8 @@
             const closeBtn = $('.close-btn');
 
             let events = {};
-
+            let timetableData;
+            
             let today = new Date();
             let currentMonth = today.getMonth();
             let currentYear = today.getFullYear();
@@ -79,44 +73,58 @@
                 }
                 renderCalendar(currentMonth, currentYear);
             }
-
+            try {
+        timetableData = JSON.parse('{{ timetable_data_json|safe }}');
+        console.log('{{ timetable_data_json|safe }}'); //  Это можно оставить для отладки
+    } catch (error) {
+        console.error("Ошибка парсинга JSON:", error);
+        timetableData = []; //  На случай ошибки парсинга
+    }
             function renderCalendar(month, year) {
-                calendarGrid.empty();
+    calendarGrid.empty();
 
-                const firstDay = new Date(year, month, 1).getDay();
-                const daysInMonth = 32 - new Date(year, month, 32).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = 32 - new Date(year, month, 32).getDate();
 
-                const monthNames = ['ЯНВАРЬ', 'ФЕВРАЛЬ', 'МАРТ', 'АПРЕЛЬ', 'МАЙ', 'ИЮНЬ', 'ИЮЛЬ', 'АВГУСТ', 'СЕНТЯБРЬ', 'ОКТЯБРЬ', 'НОЯБРЬ', 'ДЕКАБРЬ'];
+    const monthNames = ['ЯНВАРЬ', 'ФЕВРАЛЬ', 'МАРТ', 'АПРЕЛЬ', 'МАЙ', 'ИЮНЬ', 'ИЮЛЬ', 'АВГУСТ', 'СЕНТЯБРЬ', 'ОКТЯБРЬ', 'НОЯБРЬ', 'ДЕКАБРЬ'];
 
-                monthYear.text(`${monthNames[month]} ${year}`);
+    monthYear.text(`${monthNames[month]} ${year}`);
 
-                // Render days of previous month
-                const prevMonthDays = firstDay === 0 ? 6 : firstDay - 1;
-                for (let i = prevMonthDays; i > 0; i--) {
-                    calendarGrid.append('<div class="day invalid-day"><span class="invalid-day-tag"></span></div>');
-                }
+    // Функция для получения дня недели по дате (ДЛЯ УДОБСТВА ПОВТОРЕНА ЗДЕСЬ)
+    function getDayOfWeek(dateString) {
+    const dateObj = new Date(dateString);
+    const dayOfWeekIndex = dateObj.getDay();
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; // Английские названия
+    return daysOfWeek[dayOfWeekIndex];
+}
 
-                // Render current month days
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-                    const eventCount = events[dateStr] || 0;
-                    const dayClass = eventCount > 0 ? 'day has-events' : 'day';
 
-                    calendarGrid.append(`
-                        <div class="${dayClass}" data-date="${dateStr}">
-                            <span class="date">${day}</span>
-                            <span class="events">${eventCount > 0 ? `Тренировок: ${eventCount}` : ''}</span>
-                        </div>
-                    `);
-                }
+    // Render days of previous month
+    const prevMonthDays = firstDay === 0 ? 6 : firstDay - 1;
+    for (let i = 0; i < prevMonthDays; i++) {  // Исправлено: начинаем с 0
+        calendarGrid.append('<div class="day invalid-day"></div>'); // Упрощено
+    }
 
-                // Render days of next month
-                const totalCells = prevMonthDays + daysInMonth;
-                const nextMonthDays = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-                for (let i = 0; i < nextMonthDays; i++) {
-                    calendarGrid.append('<div class="day invalid-day"><span class="invalid-day-tag">Invalid Day</span></div>');
-                }
-            }
+    // Render current month days
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        const dayOfWeek = getDayOfWeek(dateStr); // !!! Получаем день недели
+
+
+        calendarGrid.append(`
+            <div class="day" data-date="${dateStr}" data-day-of-week="${dayOfWeek}">
+                <span class="date">${day}</span> </div>`);
+
+
+    }
+
+    // Render days of next month (Упрощено)
+    const totalCells = prevMonthDays + daysInMonth;
+    const nextMonthDays = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    for (let i = 0; i < nextMonthDays; i++) {
+        calendarGrid.append('<div class="day invalid-day"></div>');
+    }
+}
 
             function changeMonth(offset) {
                 currentMonth += offset;
@@ -141,33 +149,50 @@
             renderCalendar(currentMonth, currentYear);
 
             calendarGrid.on('click', '.day:not(.invalid-day)', function() {
-                const date = $(this).data('date');
-                const dateObj = new Date(date);
-                const options = { day: 'numeric', month: 'long' };
-                const formattedDate = dateObj.toLocaleDateString('ru-RU', options);
+        const clickedDayOfWeek = $(this).data('day-of-week'); // Получаем день недели
 
-                selectedDateSpan.text(formattedDate);
+        // Фильтруем тренировки по дню недели
+        const eventsForDayOfWeek = timetableData.filter(event => event.day_of_week === clickedDayOfWeek);
 
-                // Заполняем список тренировок для выбранной даты
-                eventsList.empty();
-                if (events[date]) {
-                    events[date].forEach(event => {
-                        eventsList.append(`
-                            <li>
-                                <h4 class="event-title">${event.title}</h4>
-                                <p class="user-name">${event.user}</p>
-                                <p class="event-description">${event.description}</p>
-                            </li>
-                        `);
-                    });
-                } else {
-                    eventsList.append('<li>Нет тренировок</li>');
-                }
+        eventsList.empty();
 
-                // Показываем сайдбар и затемняем экран
-                sidebar.addClass('open');
-                overlay.addClass('open');
-            });
+        if (eventsForDayOfWeek.length > 0) {
+                eventsForDayOfWeek.forEach(event => {
+            let editUrlBase = "{% url 'timetable_update' 0 %}".replace('/0', '');  // Удаляем 0
+            let deleteUrlBase = "{% url 'timetable_delete' 0 %}".replace('/0', '');
+
+
+            // Добавляем pk к URL-ам в JavaScript
+            let editLink = `<a href="${editUrlBase}${event.pk}/" class="edit-button">Редактировать</a>`; //  Добавлен слеш
+            let deleteLink = `<a href="${deleteUrlBase}${event.pk}/" class="delete-button">Удалить</a>`; // Добавлен слеш
+
+                    
+            
+                   eventsList.append(`
+            <li class="timetable-item">
+                <div class="timetable-content">
+                    ${event.student} - ${event.start_time} - ${event.end_time}
+                </div>
+                <div class="timetable-actions">
+                    ${editLink}
+                    ${deleteLink}
+                </div>
+            </li>`);
+    
+                });
+            } else {
+                eventsList.append(`<li>Нет тренировок в ${clickedDayOfWeek}</li>`);
+            }
+
+
+        // Отображаем день недели в заголовке сайдбара
+        selectedDateSpan.text(clickedDayOfWeek); //  Заменили clickedDate на clickedDayOfWeek
+
+
+
+        sidebar.addClass('open');
+        overlay.addClass('open');
+    });
 
             closeBtn.click(function() {
                 sidebar.removeClass('open');
