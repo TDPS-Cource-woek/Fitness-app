@@ -55,7 +55,7 @@ a {
 
 .right-up-container{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
 }
 
@@ -73,6 +73,12 @@ a {
     width: 55%; /* Adjust as needed */
     display: flex; /* Enable flexbox for right sections */
     flex-direction: column; /* Stack summary below chart */
+}
+
+.right-section-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .right-right-section {
@@ -101,6 +107,11 @@ a {
     margin-bottom: 15px; 
 }
 
+.button_container{
+    display: flex;
+    justify-content: center;
+}
+
 .food-entry {
     background-color: #fff;
     border-radius: 20px;
@@ -118,6 +129,14 @@ a {
     padding: 2px;
     border-top: none;
     border-bottom: none;
+}
+
+.chart{
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .summary .chart {
@@ -422,6 +441,8 @@ a {
 }
 
 .btn-info{
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
     background-color: #5da130;
@@ -440,6 +461,20 @@ a {
     text-decoration: none !important;
     font-family: Arial, sans-serif;
     border: 2px solid white;
+}
+
+#lol-btn{
+    width: 40%;
+}
+
+.lol-lol-btn-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lol-lol-btn{
+    width: 40%;
 }
 
 .btn-info:hover{
