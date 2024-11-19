@@ -54,31 +54,34 @@
       </div>
   </div>
 
-  <!--Всего наели-->
-  <table class="data">
-      <tr>
-          <td class="column">
-            <div class="label colored">Белки</div>
-            <div class="value" id="proteins_sum">{{ proteins_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">Жиры</div>
-            <div class="value" id="fats_sum">{{ fats_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">Углев</div>
-            <div class="value" id="carbs_sum">{{ carbs_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">ККал</div>
-            <div class="value" id="calories_sum">{{ calories_sum|floatformat:1 }}</div>
-          </td>
-        </tr>
-  </table>
+  
 
   <div class="main-content">
   <!--Завтра-Ужин + Вода + Тренировки + Сон-->
   <div class="left-section">
+
+        <!--Всего наели-->
+      <table class="data">
+        <tr>
+            <td class="column">
+              <div class="label colored">Белки</div>
+              <div class="value" id="proteins_sum">{{ proteins_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">Жиры</div>
+              <div class="value" id="fats_sum">{{ fats_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">Углев</div>
+              <div class="value" id="carbs_sum">{{ carbs_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">ККал</div>
+              <div class="value" id="calories_sum">{{ calories_sum|floatformat:1 }}</div>
+            </td>
+          </tr>
+    </table>
+
     <div class="container">
         <div class="food-entry breakfast">
           <div class="label">Завтрак</div>
@@ -152,9 +155,13 @@
           </form>
       </div>
     </div>
+
+    <div class="button_container">
+      <a class="btn-info" href="{%url 'meal_record_read' %}">Посмотреть всю еду</a>
+    </div>
   </div>
 
-  <p><a class="btn-primary" href="{%url 'meal_record_read' %}" style="color:brown">Посмотреть всю еду</a></p>
+  
   
   <!--Диаграмма + данные-->
   <div class="right-container">
@@ -181,7 +188,7 @@
         <div class="right-right-section">  <!-- Summary section -->
           <div class="chart">
             {{chart|safe}}
-                <a class="btn-info" href="{%url 'colory_dynamic' %}" style="color:brown">На страницу с графиками колорий</a>
+                <a class="btn-info" href="{%url 'colory_dynamic' %}">На страницу с графиками колорий</a>
               <!-- ... (hidden inputs and details) ... -->
           </div>
         </div>
