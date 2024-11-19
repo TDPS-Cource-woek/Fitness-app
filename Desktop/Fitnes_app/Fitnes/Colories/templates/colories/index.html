@@ -54,31 +54,34 @@
       </div>
   </div>
 
-  <!--Всего наели-->
-  <table class="data">
-      <tr>
-          <td class="column">
-            <div class="label colored">Белки</div>
-            <div class="value" id="proteins_sum">{{ proteins_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">Жиры</div>
-            <div class="value" id="fats_sum">{{ fats_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">Углев</div>
-            <div class="value" id="carbs_sum">{{ carbs_sum|floatformat:1 }}</div>
-          </td>
-          <td class="column">
-            <div class="label colored">ККал</div>
-            <div class="value" id="calories_sum">{{ calories_sum|floatformat:1 }}</div>
-          </td>
-        </tr>
-  </table>
+  
 
   <div class="main-content">
   <!--Завтра-Ужин + Вода + Тренировки + Сон-->
   <div class="left-section">
+
+        <!--Всего наели-->
+      <table class="data">
+        <tr>
+            <td class="column">
+              <div class="label colored">Белки</div>
+              <div class="value" id="proteins_sum">{{ proteins_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">Жиры</div>
+              <div class="value" id="fats_sum">{{ fats_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">Углев</div>
+              <div class="value" id="carbs_sum">{{ carbs_sum|floatformat:1 }}</div>
+            </td>
+            <td class="column">
+              <div class="label colored">ККал</div>
+              <div class="value" id="calories_sum">{{ calories_sum|floatformat:1 }}</div>
+            </td>
+          </tr>
+    </table>
+
     <div class="container">
         <div class="food-entry breakfast">
           <div class="label">Завтрак</div>
@@ -152,39 +155,47 @@
           </form>
       </div>
     </div>
+
+    <div class="button_container">
+      <a class="btn-info" id="lol-btn" href="{%url 'meal_record_read' %}">Посмотреть всю еду</a>
+    </div>
   </div>
 
-  <p><a class="btn-primary" href="{%url 'meal_record_read' %}" style="color:brown">Посмотреть всю еду</a></p>
+  
   
   <!--Диаграмма + данные-->
   <div class="right-container">
     <div class="right-up-container">
-      <div class="right-section">
-        <div class="summary">
-            <div class="details">
-                <!-- Скрытые поля для передачи данных -->
-                <input type="hidden" id="hiddenTotalCalories" value="{{ needed }}">
-                <input type="hidden" id="hiddenEatenCalories" value="{{ calories_sum }}">
-                <input type="hidden" id="hiddenRemainingCalories" value="{{ ostatok }}">
-                <div>Требуется: <span id="totalCalories"> {{ needed }} </span></div>
-                <div>Съедено: <span id="eatenCalories"> {{ calories_sum }} </span></div>
-                <div>Осталось: <span id="remainingCalories"> {{ ostatok }} </span></div>
-      
-                <div class="macros">
-                  <div style="color: rgb(248, 195, 37);">Белки: <span id="proteinPercent">{{ protein_percent|floatformat:1 }}</span>%</div>
-                  <div style="color: rgb(93, 161, 48);">Жиры: <span id="fatPercent">{{ fat_percent|floatformat:1 }}</span>%</div>
-                  <div style="color: rgb(36, 56, 23);">Углеводы: <span id="carbPercent">{{ carb_percent|floatformat:1 }}</span>%</div>
-                </div>
+      <div class="right-section-wrapper">
+        <div class="right-section">
+          <div class="summary">
+              <div class="details">
+                  <!-- Скрытые поля для передачи данных -->
+                  <input type="hidden" id="hiddenTotalCalories" value="{{ needed }}">
+                  <input type="hidden" id="hiddenEatenCalories" value="{{ calories_sum }}">
+                  <input type="hidden" id="hiddenRemainingCalories" value="{{ ostatok }}">
+                  <div>Требуется: <span id="totalCalories"> {{ needed }} </span></div>
+                  <div>Съедено: <span id="eatenCalories"> {{ calories_sum }} </span></div>
+                  <div>Осталось: <span id="remainingCalories"> {{ ostatok }} </span></div>
+        
+                  <div class="macros">
+                    <div style="color: rgb(248, 195, 37);">Белки: <span id="proteinPercent">{{ protein_percent|floatformat:1 }}</span>%</div>
+                    <div style="color: rgb(93, 161, 48);">Жиры: <span id="fatPercent">{{ fat_percent|floatformat:1 }}</span>%</div>
+                    <div style="color: rgb(36, 56, 23);">Углеводы: <span id="carbPercent">{{ carb_percent|floatformat:1 }}</span>%</div>
+                  </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="right-right-section">  <!-- Summary section -->
-          <div class="chart">
-            {{chart|safe}}
-                <a class="btn-info" href="{%url 'colory_dynamic' %}" style="color:brown">На страницу с графиками колорий</a>
-              <!-- ... (hidden inputs and details) ... -->
+          <div class="right-right-section">  <!-- Summary section -->
+            <div class="chart">
+              {{chart|safe}} 
+                <!-- ... (hidden inputs and details) ... -->
+            </div>
           </div>
-        </div>
+      </div>
+      <div class="lol-lol-btn-container">
+        <a class="btn-info" id="lol-lol-btn" href="{%url 'colory_dynamic' %}">На страницу с графиками калорий</a>
+      </div>
     </div>
     
     <div class="message-container">

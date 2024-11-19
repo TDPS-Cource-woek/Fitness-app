@@ -31,7 +31,7 @@
     width: 100%; /* Кнопки занимают всю ширину контейнера */
     max-width: 120px; /* Максимальная ширина для всех кнопок */
     height: 50px; /* Фиксированная высота для всех кнопок */
-    background-color: #5da130;
+    background-color: #5da130 !important;
     color: white;
     display: flex;
     align-items: center;
@@ -44,5 +44,5 @@
 }
 
 .btn-secondary:hover {
-    background-color: #0e4128;
+    background-color: #0e4128 !important;
 }
