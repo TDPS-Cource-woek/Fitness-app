@@ -59,7 +59,7 @@ class ExpertTimetable(models.Model):
         ('Sunday', 'Воскресенье'),
     ]
     #с кем занятие (для раскрашивания расписания в разные цвета)
-    student = models.OneToOneField(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #ForeignKey instead of OneToOneField
     day_of_week = models.CharField(max_length=9, choices=DAYS_OF_WEEK)
     start_time = models.TimeField()
     end_time = models.TimeField()

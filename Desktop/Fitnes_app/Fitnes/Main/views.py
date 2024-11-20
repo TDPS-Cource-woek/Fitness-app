@@ -15,10 +15,12 @@ class A:
     x = 1
     
 def index(request):
+    user_id = request.user.id
     context = {
         'title': 'Главная страница приложения',
         'message': 'Вы находитесь на главной странице сайта',
         'page': 'main',
+        'user_id': user_id
     }
     return render(request, 'main/index.html', context)
 
