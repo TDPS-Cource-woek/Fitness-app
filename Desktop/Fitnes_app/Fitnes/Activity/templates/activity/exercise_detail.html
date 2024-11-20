@@ -6,10 +6,12 @@
     <div class="exercise-info">
         <div class="top">
             <h1>Детали упражнения</h1>
-            <div class="action-buttons">
-                <a href="{% url 'exercise_update' exercise.pk %}" class="button btn-edit">Редактировать</a>
-                <button class="button btn-delete" id="deleteButton">Удалить</button>
-            </div>
+            {% if exercise.user == user %}  <!-- Условное отображение кнопок -->
+                <div class="action-buttons">
+                    <a href="{% url 'exercise_update' exercise.pk %}" class="button btn-edit">Редактировать</a>
+                    <button class="button btn-delete" id="deleteButton">Удалить</button>
+                </div>
+            {% endif %}
         </div>
         <p>Пользователь: {{ exercise.user }}</p>
         <p>Дата: {{ exercise.date }}</p>
@@ -49,6 +51,8 @@
         <p>Вы уверены, что хотите удалить это упражнение?</p>
         <form method="post" action="{% url 'exercise_delete' exercise.pk %}">
             {% csrf_token %}
+
+            
             <div class="modal-buttons">
                 <button type="submit" class="button btn-delete">Удалить</button>
                 <button type="button" id="cancelButton" class="button btn-cancel">Отмена</button>

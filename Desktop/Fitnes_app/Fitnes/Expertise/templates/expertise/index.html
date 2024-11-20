@@ -5,13 +5,19 @@
 <link rel="stylesheet" href="{% static 'expertise/css/index_2.css' %}" type="text/css" media="all">
 
 <body>
-  <div class="main-container">
-    <div class="message-container">
-      <h1>
-        {{ message }}
-      </h1>
-    </div>
-  </div>
+  <h1>Видео от наших экспертов</h1>
+    <ul>
+        {% for exercise in exercises %}
+            <li>
+                <a href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.title }}</a>
+                <div class="video-preview">
+                    {% with exercise.link_to_video|cut:"https://www.youtube.com/watch?v=" as video_id %}
+                        <iframe width="150" height="84" src="https://www.youtube.com/embed/{{ video_id }}" title="{{ exercise.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% endwith %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

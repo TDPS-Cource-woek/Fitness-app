@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import json
-
+from Profiles.models import ExpertProfile
 #from tasks.models import Profile, Task
-
+from Activity.models import Exercise
 def index(request):
+    exercises_with_videos = Exercise.objects.filter(link_to_video__isnull=False) #берем только упражнения с видео
     context = {
-        'title': 'Страница наших экспертов',
-        'message': 'Эксперты',
+        'title': 'Видео от наших экспертов',
+        'exercises': exercises_with_videos,
+        'message': 'Видео тренировок',
         'page': 'expertise_main',
     }
     return render(request, 'expertise/index.html', context)
