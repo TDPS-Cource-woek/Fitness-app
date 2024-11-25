@@ -46,3 +46,23 @@
 .btn-secondary:hover {
     background-color: #0e4128;
 }
+
+.table-video{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style-type: none;
+}
+
+.video{
+    padding: 20px;
+}
+
+.text-video{
+    color: black;
+}
+
+.text-video:hover{
+    color: black;
+    text-decoration: none;
+}

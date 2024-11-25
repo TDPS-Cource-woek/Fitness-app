@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'expertise/css/index_2.css' %}" type="text/css" media="all">
+<link rel="stylesheet" href="{% static 'expertise/css/index.css' %}" type="text/css" media="all">
 
 <body>
   <h1>Видео от наших экспертов</h1>
-    <ul>
+    <ul class="table-video">
         {% for exercise in exercises %}
-            <li>
-                <a href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.title }}</a>
+            <li class="video">
                 <div class="video-preview">
                     {% with exercise.link_to_video|cut:"https://www.youtube.com/watch?v=" as video_id %}
-                        <iframe width="150" height="84" src="https://www.youtube.com/embed/{{ video_id }}" title="{{ exercise.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="255" height="150" src="https://www.youtube.com/embed/{{ video_id }}" title="{{ exercise.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     {% endwith %}
                 </div>
+                <a class="text-video" href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.title }}</a>
             </li>
         {% endfor %}
     </ul>
