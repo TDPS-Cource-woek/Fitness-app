@@ -1,11 +1,17 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block content %}
-<h2>{{ title }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-</form>
-<a href="{% url 'timetable_list' %}">Назад к списку</a>
+<link rel="stylesheet" href="{% static 'expertise/css/expert_timetable_form.css' %}" type="text/css" media="all">
+
+<div class="main-container">
+    <h2>{{ title }}</h2>
+    <form method="post" class="form-class">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+        <a class="return-button" href="{% url 'timetable_list' %}">Назад к списку</a>
+    </form>
+    
+</div>
 {% endblock %}
