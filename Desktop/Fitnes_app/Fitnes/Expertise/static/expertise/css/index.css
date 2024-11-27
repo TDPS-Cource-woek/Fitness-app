@@ -1,6 +1,12 @@
 .main-container{
     display: flex;
     flex-direction: column;
+    margin: 10px;
+}
+
+.main-text{
+    display: flex;
+    justify-content: center;
 }
 
 .message-container{

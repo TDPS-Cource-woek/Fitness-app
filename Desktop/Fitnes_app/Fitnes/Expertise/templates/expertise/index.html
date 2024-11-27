@@ -5,19 +5,23 @@
 <link rel="stylesheet" href="{% static 'expertise/css/index.css' %}" type="text/css" media="all">
 
 <body>
-  <h1>Видео от наших экспертов</h1>
-    <ul class="table-video">
-        {% for exercise in exercises %}
-            <li class="video">
-                <div class="video-preview">
-                    {% with exercise.link_to_video|cut:"https://www.youtube.com/watch?v=" as video_id %}
-                        <iframe width="255" height="150" src="https://www.youtube.com/embed/{{ video_id }}" title="{{ exercise.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    {% endwith %}
-                </div>
-                <a class="text-video" href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+  <div class="main-container">
+      <div class="main-text">
+          <h1>Видео от наших экспертов</h1>
+      </div>
+        <ul class="table-video">
+            {% for exercise in exercises %}
+                <li class="video">
+                    <div class="video-preview">
+                        {% with exercise.link_to_video|cut:"https://www.youtube.com/watch?v=" as video_id %}
+                            <iframe width="255" height="150" src="https://www.youtube.com/embed/{{ video_id }}" title="{{ exercise.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        {% endwith %}
+                    </div>
+                    <a class="text-video" href="{% url 'exercise_detail' exercise.pk %}">{{ exercise.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
