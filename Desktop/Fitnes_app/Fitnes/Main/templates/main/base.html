@@ -52,7 +52,7 @@
             <a class="dropdown-item" href="{% url 'index-progress' %}">Достижения</a>
           {% endif %}
         </div>
-        <div class="logo-container"><img src="{% static 'main/img/name1.png' %}" alt="logo-top" class="logo-top"></div>
+        <div class="logo-container"><a href="/fitnes/"><img src="{% static 'main/img/name1.png' %}" alt="logo-top" class="logo-top"></a></div>
       
         <div class="logout-container">
           {% if user.is_authenticated %}

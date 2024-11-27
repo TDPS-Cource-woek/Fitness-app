@@ -23,6 +23,18 @@
     text-align: left;
 }
 
+.logo-container a {
+    display: inline-block;
+    width: auto;
+    height: auto;
+}
+
+.logo-container img {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
 .logout1 {
     
     margin-left: 600px;
