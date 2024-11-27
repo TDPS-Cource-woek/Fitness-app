@@ -3,35 +3,42 @@
 
 {% block content %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <div class="header-container">
-        <h1 class="title">Тренер {{ expert_profile.nickname }}</h1>
-        <a href="#" id="profileBtn">
-          <img src="{% static 'expertise/img/icon.png' %}" alt="Icon" class="header-icon">
-      </a>
+    <header>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'profiles/css/expert_profile_detail.css' %}" type="text/css" media="all">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="{% static 'main/css/styles.css' %}" type="text/css" media="all">
+        <link rel="stylesheet" href="{% static 'expertise/css/expert_timetable_list.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap">
+    </header>
+    
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="header-container">
+            <h1 class="title">Тренер: {{ expert_profile.nickname }}</h1>
+            <div class="button_icon_container">
+                  <img id="profileBtn" src="{% static 'expertise/img/icon.png' %}" alt="Icon" class="header-icon">
+            </div>
+        </div>
+        <div class="btn-container">
+          <a href="{% url 'timetable_create' %}" class="btn btn-primary">Добавить расписание</a>
+          <a href="{% url 'exercise_list' %}" class="btn btn-primary">Перейти к тренировкам</a>
+          <a href="{% url 'timetable_list' %}" class="btn btn-primary">Посмотреть расписание</a>
+          </div>
+        <ul>
+        {% for timetable in timetables %}
+        <li>
     </div>
-    <div class="btn-container">
-      <a href="{% url 'timetable_create' %}" class="btn btn-primary">Добавить расписание</a>
-      <a href="{% url 'exercise_list' %}" class="btn btn-primary">Перейти к тренировкам</a>
-      <a href="{% url 'timetable_list' %}" class="btn btn-primary">Посмотреть расписание</a>
-  </div>
-    <ul>
-    {% for timetable in timetables %}
-    <li>
         <a href="{% url 'timetable_detail' timetable.pk %}">{{ timetable.expert }} - {{ timetable.day_of_week }}: {{ timetable.start_time }} - {{ timetable.end_time }}</a>
         <a href="{% url 'timetable_update' timetable.pk %}">Редактировать</a>
         <a href="{% url 'timetable_delete' timetable.pk %}">Удалить</a>
     </li>
     {% endfor %}
     </ul>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="{% static 'main/css/styles.css' %}" type="text/css" media="all">
-    <link rel="stylesheet" href="{% static 'expertise/css/expert_timetable_list.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap">
-</head>
 
-<body>
   <div id="profileSidebar" class="sidebar">
     <div class="sidebar-content">
         <span class="close-btn">&times;</span>
