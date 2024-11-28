@@ -10,25 +10,25 @@
         {{ message }}
       </h1>
     </div>
-    <div class="text-container">
-      <p>Попробуйте бесплатные тренировки от наших тренеров в соответствие с вашими предпочтениями</p>
-    </div>
-    <div class="button-container">
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Пресс</a></div>
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Кардио</a></div>
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Руки</a></div>
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Спина</a></div>
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Ноги</a></div>
-      <div class="button-wrapper"><a class="btn-secondary" href="/colories/">Ягодицы</a></div>
-    </div>
-    <div class="video-container">
+    {% if user.is_authenticated %}
+    {% if assigned_workouts %}
+        <div class="workout-list">  <!-- Контейнер для тренировок -->
+            {% for workout in assigned_workouts %}
+                <div class="workout-item"> <!-- workout-item как прямоугольник -->
+                    <p>Эксперт: {{ workout.expert.nickname }}</p>
+                    <p>День недели: {{ workout.get_day_of_week_display }}</p>
+                    <p>Время начала: {{ workout.start_time }}</p>
+                    <p>Время конца: {{ workout.end_time }}</p>
+                </div>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет назначенных тренировок.</p>
+    {% endif %}
 
-    </div>
-  </div>
+{% else %}
+    <p><a href="{% url 'login' %}">Войдите</a>, чтобы увидеть тренировки.</p>
+{% endif %}
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
 
-</body>
-{% endblock content %}

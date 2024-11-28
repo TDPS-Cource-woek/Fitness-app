@@ -14,24 +14,37 @@ from Profiles.models import UserCaloryProfile
 from django.urls import reverse
 import plotly.express as px # type: ignore
 from django.utils import timezone
+from datetime import datetime, timedelta, date
+import json
 
 def colory_dynamic(request):
     user_id = request.user.id
-    selected_date = request.POST.get('selected_date')
-    print()
-    print(selected_date)
-    if selected_date:
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+    selected_period = request.GET.get('period', 'week') 
+
+    today = date.today()
+    if selected_period == 'week':
+        start_date = today - timedelta(days=8)
+        end_date = today
+    elif selected_period == 'month':
+        start_date = today - timedelta(days=29)  # Приблизительно месяц
+        end_date = today
+    elif selected_period == '3months':
+        start_date = today - timedelta(days=89)  # Приблизительно 3 месяца
+        end_date = today
     else:
-        selected_date = date.today()
-    chart = calories_chart(request, user_id, selected_date)
-    train_chart = calories_burned_chart(request, user_id, selected_date)
+        start_date = today - timedelta(days=6)  # По умолчанию неделя
+        end_date = today
+
+    calories_burned_chart_data = calories_burned_chart(request, user_id, start_date, end_date)
+    chart_data = calories_chart(request, user_id, start_date, end_date)
+
     context = {
         'title': 'Страница для отображения изменения калорий',
         'message': 'Вы находитесь на странице Colories_dynamic',
         'page': 'colories_dynamic',
-        'chart': chart,
-        'train_chart': train_chart
+        'calories_burned_chart_data': calories_burned_chart_data,
+        'chart_data': chart_data,
+        'selected_period': selected_period,
     }
     return render(request, 'colories/dynamic.html', context)
 
@@ -81,7 +94,7 @@ def index(request):
     meal_record = MealRecord.objects.filter(user=request.user)
     if request.user.is_authenticated:
         user_id = request.user.id
-        calories_chart_data = calories_chart(request, user_id, selected_date)
+        
         todays_meals = MealRecord.objects.filter(user=request.user, meal_time__date=selected_date)
         breakfast_data = get_meal_data(todays_meals, 'Breakfast')
         lunch_data = get_meal_data(todays_meals, 'Dinner')
@@ -110,7 +123,7 @@ def index(request):
             'title': 'Страница для учёта Ваших калорий',
             'message': 'Вы находитесь на главной странице Colories',
             'page': 'colories_main',
-            'calories_chart_data': calories_chart_data,
+          
             'mealrecord': meal_record,
             'breakfast_data': breakfast_data,
             'lunch_data': lunch_data,
@@ -203,25 +216,28 @@ def calculate_today_sleep(user, selected_date):
     return sleep_hours, sleep_minutes
 
 @login_required
-def calories_chart(request, user_id, selected_date):
-    # Получаем данные о калориях пользователя
+def calories_chart(request, user_id, start_date, end_date):
     user = get_object_or_404(User, pk=user_id)
-    user_history = get_user_history(user_id, start_date=selected_date, end_date=selected_date)
-    # Создаем данные для графика
-    dates = [record.date for record in user_history]
-    calories = [record.total_calories for record in user_history]
-    # Создаем график plotly
-    
+    user_history = get_user_history(user_id, start_date=start_date, end_date=end_date)
+
+    dates = []
+    calories = []
+    for record in user_history:
+        dates.append(record.date.strftime('%Y-%m-%d'))
+        calories.append(record.total_calories)
+
     fig = go.Figure(data=go.Bar(x=dates, y=calories))
-    fig.update_layout(title="Динамика калорийности",
-                      xaxis_title="Дата",
-                      yaxis_title="Калории")
     fig.update_layout(
-        paper_bgcolor="#f0f0f0",  # Цвет фона графика
-        plot_bgcolor="#f0f0f0"  # Цвет области графика
+        title="Динамика калорийности",
+        xaxis_title="Дата",
+        yaxis_title="Калории",
     )
-    chart = fig.to_html()
-    return chart
+    fig.update_layout(
+        paper_bgcolor="#f0f0f0",
+        plot_bgcolor="#f0f0f0"
+    )
+    chart_data = json.dumps(fig.to_dict()) # сериализация в JSON
+    return chart_data
 
 
 @login_required
@@ -347,42 +363,27 @@ def meal_record_delete(request, meal_record_id):
     }
     return render(request, 'colories/meal_record_delete.html', context)
 
-def calories_burned_chart(request, user_id, selected_date):
-    start_of_week = selected_date - timedelta(days=selected_date.weekday())
-    end_of_week = start_of_week + timedelta(days=6)
-
+def calories_burned_chart(request, user_id, start_date, end_date):
     exercises = Exercise.objects.filter(
         user__id=user_id, 
-        date__range=[start_of_week, end_of_week]
+        date__range=[start_date, end_date]
     ).values('date', 'calories_burned')
 
-    dates = []
-    calories = []
-
-    # Группируем данные по датам
     daily_calories = {}
     for exercise in exercises:
-        date_str = exercise['date'].strftime('%Y-%m-%d')
-        if date_str in daily_calories:
-            daily_calories[date_str] += exercise['calories_burned']
-        else:
-            daily_calories[date_str] = exercise['calories_burned']
+        date_obj = exercise['date']  #  уже объект datetime.date
+        if date_obj not in daily_calories:
+            daily_calories[date_obj] = 0
+        daily_calories[date_obj] += exercise['calories_burned']
 
-    # Сортируем данные по дате
-    sorted_data = sorted(daily_calories.items(), key=lambda x: x[0])
+    # Сортировка по дате
+    sorted_data = sorted(daily_calories.items())
 
-    # Заполняем списки dates и calories для графика
-    for date_str, calories_burned in sorted_data:
-        dates.append(date_str)
-        calories.append(calories_burned)
+    dates = [date_obj.strftime('%Y-%m-%d') for date_obj, _ in sorted_data]
+    calories = [calories_burned for _, calories_burned in sorted_data]
 
     fig = go.Figure(data=[go.Bar(x=dates, y=calories)])
-    fig.update_layout(
-        title="Сожженные калории за неделю",
-        xaxis_title="Дата",
-        yaxis_title="Калории",
-        xaxis_tickangle=-45
-    )
+    fig.update_layout(title="Сожженные калории", xaxis_title="Дата", yaxis_title="Калории", xaxis_tickangle=-45)
 
-    chart = fig.to_html()
-    return chart
+    chart_data = json.dumps(fig.to_dict()) #сериализация в JSON
+    return chart_data 

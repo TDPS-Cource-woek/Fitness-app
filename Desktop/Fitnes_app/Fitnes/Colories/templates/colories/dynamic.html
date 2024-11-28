@@ -4,7 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'main/css/forms.css' %}" type="text/css" media="all">
-
+<link rel="stylesheet" href="{% static 'colories/css/styles_colories.css' %}" type="text/css" media="all">
 <h2>Динамика</h2>
 
 <div class="dynamics-container">
@@ -15,60 +15,50 @@
             <option value="training" {% if selected_period == 'training' %}selected{% endif %}>Тренировки</option>
         </select>
     </div>
-    <div class="period-buttons">
-        <button class="period-button {% if selected_period == 'week' %}active{% endif %}" data-period="week">Неделя</button>
-        <button class="period-button {% if selected_period == 'month' %}active{% endif %}" data-period="month">Месяц</button>
-        <button class="period-button {% if selected_period == '3months' %}active{% endif %}" data-period="3months">3 месяца</button>
+
+    <div class="button_container">
+        <a href="{% url 'colory_dynamic' %}?period=week" class="btn-info" id="lol-btn {% if selected_period == 'week' %}active{% endif %}">Неделя</a>
+        <a href="{% url 'colory_dynamic' %}?period=month"  class="btn-info" id="lol-btn {% if selected_period == 'month' %}active{% endif %}">Месяц</a>
+        <a href="{% url 'colory_dynamic' %}?period=3months"  class="btn-info" id="lol-btn {% if selected_period == '3months' %}active{% endif %}">3 месяца</a>
     </div>
 
-    
-        {{train_chart|safe}}
-        <div class="charts">
-            <div class="chart" id="calories-burned-chart-container"></div>
-        </div>
+    <div id="calories-burned-chart-container" {% if selected_period != 'training' %}style="display: none;"{% endif %}> 
+    </div>
+    <div id="calories-chart-container" {% if selected_period != 'calories' %}style="display: none;"{% endif %}>
     </div>
 
-    <div class="charts-container" id="calories-section">
-        <div class="chart-buttons">
-            <button class="active">Неделя</button>
-            <button>Месяц</button>
-            <button>3 месяца</button>
-        </div>
-        <div class="charts">
-            <div class="chart" id="calories-chart">
-                {{ chart|safe }}
-            </div>
-        </div>
-    </div>
 </div>
-<!--Фронт нуждается в переработке, сделал просто чтоб было-->
-<a class="btn-info" href="{% url 'index-colories' %}">На главную страницу колорий</a>
 
+<div class="button_container">
+    <a class="btn-info" id="lol-btn" href="{% url 'index-colories' %}">На главную страницу колорий</a>
+  </div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const caloriesBurnedChartData = JSON.parse('{{ calories_burned_chart_data | safe }}');
+        const caloriesBurnedChartData = JSON.parse('{{ calories_burned_chart_data|safe }}');
         Plotly.newPlot('calories-burned-chart-container', caloriesBurnedChartData.data, caloriesBurnedChartData.layout);
 
-        const macronutrientChartData = JSON.parse('{{ macronutrient_chart_data | safe }}');
-        Plotly.newPlot('macronutrient-chart-container', macronutrientChartData.data, macronutrientChartData.layout);
+        const chartData = JSON.parse('{{ chart_data|safe }}');
+        Plotly.newPlot('calories-chart-container', chartData.data, chartData.layout);  //  Используем chartData
     });
 
 
     const trackingSelect = document.getElementById('tracking-select');
-    const caloriesSection = document.getElementById('calories-section');
-    const trainingSection = document.getElementById('training-section');
+const caloriesChartContainer = document.getElementById('calories-chart-container'); //id=calories-chart-container
+const caloriesBurnedChartContainer = document.getElementById('calories-burned-chart-container'); //id=calories-burned-chart-container
 
-    trackingSelect.addEventListener('change', () => {
-        const selectedValue = trackingSelect.value;
+trackingSelect.addEventListener('change', () => {
+    const selectedValue = trackingSelect.value;
 
-        if (selectedValue === 'calories') {
-            caloriesSection.style.display = 'block';
-            trainingSection.style.display = 'none';
-        } else if (selectedValue === 'training') {
-            caloriesSection.style.display = 'none';
-            trainingSection.style.display = 'block';
-        }
-    });
+    if (selectedValue === 'calories') {
+        caloriesChartContainer.style.display = 'block'; //caloriesChartContainer
+        caloriesBurnedChartContainer.style.display = 'none';//caloriesBurnedChartContainer
+    } else if (selectedValue === 'training') {
+        caloriesChartContainer.style.display = 'none';//caloriesChartContainer
+        caloriesBurnedChartContainer.style.display = 'block';//caloriesBurnedChartContainer
+    }
+});
 </script>
 
 {% endblock %}

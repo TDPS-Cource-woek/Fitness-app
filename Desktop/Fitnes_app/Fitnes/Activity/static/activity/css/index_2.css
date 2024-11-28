@@ -48,4 +48,25 @@
     background-color: #0e4128 !important;
 }
 
+.workout-list {
+    display: flex;
+    flex-direction: row; /* Или column для вертикального расположения */
+    flex-wrap: wrap; /* Позволяет переносить элементы на новую строку */
+    gap: 20px; /* Задает расстояние между элементами */
+}
 
+.workout-item {
+    background-color: #eef4db; /* Цвет фона */
+    border-radius: 8px;
+    padding: 15px;
+    width: 300px; /* Ширина элемента (пример, настройте под свой дизайн) */
+    margin-bottom: 20px; /* Отступ снизу */
+    text-align: center;
+    box-sizing: border-box;  /* padding and border included */
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.workout-item p {
+    margin: 5px 0; /* Отступы сверху и снизу */
+}

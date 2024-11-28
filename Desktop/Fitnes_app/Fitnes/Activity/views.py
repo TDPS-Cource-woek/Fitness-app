@@ -8,13 +8,26 @@ import io
 from django.contrib.auth.models import User
 import datetime
 import base64
+from Expertise.models import ExpertTimetable
+from Profiles.models import ExpertProfile
 
 def index(request):
-    context = {
-        'title': 'Страница Ваших физических активностей',
-        'message': 'Тренировки',
-        'page': 'activity_main',
-    }
+    if request.user.is_authenticated:
+        assigned_workouts = ExpertTimetable.objects.filter(student=request.user).select_related('expert')
+        print (assigned_workouts)
+
+        context = {
+            'title': 'Страница Ваших физических активностей',
+            'assigned_workouts': assigned_workouts, #передаем в контекст
+            'message': 'Тренировки',
+            'page': 'activity_main',
+        }
+    else:
+        context = {  # Контекст для неавторизованных пользователей
+            'title': 'Страница физических активностей',
+            'message': 'Войдите, чтобы увидеть свои тренировки',
+            'page': 'activity_main',
+        }
     return render(request, 'activity/index.html', context)
 
 @login_required
