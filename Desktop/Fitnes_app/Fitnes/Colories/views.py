@@ -16,6 +16,7 @@ import plotly.express as px # type: ignore
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 import json
+from Expertise.models import ExpertTimetable
 
 def colory_dynamic(request):
     user_id = request.user.id
@@ -26,7 +27,7 @@ def colory_dynamic(request):
         start_date = today - timedelta(days=8)
         end_date = today
     elif selected_period == 'month':
-        start_date = today - timedelta(days=29)  # Приблизительно месяц
+        start_date = today.replace(day=1)  
         end_date = today
     elif selected_period == '3months':
         start_date = today - timedelta(days=89)  # Приблизительно 3 месяца
@@ -35,6 +36,7 @@ def colory_dynamic(request):
         start_date = today - timedelta(days=6)  # По умолчанию неделя
         end_date = today
 
+    print(start_date, end_date)
     calories_burned_chart_data = calories_burned_chart(request, user_id, start_date, end_date)
     chart_data = calories_chart(request, user_id, start_date, end_date)
 
@@ -226,16 +228,18 @@ def calories_chart(request, user_id, start_date, end_date):
         dates.append(record.date.strftime('%Y-%m-%d'))
         calories.append(record.total_calories)
 
+    print(dates, calories)
     fig = go.Figure(data=go.Bar(x=dates, y=calories))
     fig.update_layout(
-        title="Динамика калорийности",
+        margin=dict(l=0, r=0, b=0, t=0),
+        paper_bgcolor="#f0f0f0",  # Цвет фона графика
+        plot_bgcolor="#f0f0f0",  # Цвет области графика
+        width=1000,  # Ширина в пикселях
+        height=500,
         xaxis_title="Дата",
         yaxis_title="Калории",
     )
-    fig.update_layout(
-        paper_bgcolor="#f0f0f0",
-        plot_bgcolor="#f0f0f0"
-    )
+   
     chart_data = json.dumps(fig.to_dict()) # сериализация в JSON
     return chart_data
 
@@ -364,26 +368,34 @@ def meal_record_delete(request, meal_record_id):
     return render(request, 'colories/meal_record_delete.html', context)
 
 def calories_burned_chart(request, user_id, start_date, end_date):
-    exercises = Exercise.objects.filter(
-        user__id=user_id, 
-        date__range=[start_date, end_date]
-    ).values('date', 'calories_burned')
-
+    workouts = ExpertTimetable.objects.filter(
+        student_id=user_id,  # Фильтрация по student
+        day_of_week__range=[start_date, end_date] # Фильтрация по диапазону дат
+    ).values('day_of_week', 'calories_burned')
+    
     daily_calories = {}
-    for exercise in exercises:
-        date_obj = exercise['date']  #  уже объект datetime.date
+    for workout in workouts:
+        date_obj = workout['day_of_week']
         if date_obj not in daily_calories:
             daily_calories[date_obj] = 0
-        daily_calories[date_obj] += exercise['calories_burned']
-
+        daily_calories[date_obj] += workout['calories_burned']
+   
     # Сортировка по дате
-    sorted_data = sorted(daily_calories.items())
-
+    sorted_data = sorted(daily_calories.items())  # Сортировка по дате
     dates = [date_obj.strftime('%Y-%m-%d') for date_obj, _ in sorted_data]
-    calories = [calories_burned for _, calories_burned in sorted_data]
+    calories = [cal_burned for _, cal_burned in sorted_data]
 
     fig = go.Figure(data=[go.Bar(x=dates, y=calories)])
-    fig.update_layout(title="Сожженные калории", xaxis_title="Дата", yaxis_title="Калории", xaxis_tickangle=-45)
+    fig.update_layout(
+        margin=dict(l=0, r=0, b=0, t=0),
+        paper_bgcolor="#f0f0f0",  # Цвет фона графика
+        plot_bgcolor="#f0f0f0",  # Цвет области графика
+        width=1000,  # Ширина в пикселях
+        height=500,
+        xaxis_title="Дата",
+        yaxis_title="Калории",
+        xaxis_tickangle=-45
+    )
 
     chart_data = json.dumps(fig.to_dict()) #сериализация в JSON
     return chart_data 

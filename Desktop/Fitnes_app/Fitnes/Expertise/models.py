@@ -63,3 +63,4 @@ class ExpertTimetable(models.Model):
     day_of_week = models.CharField(max_length=9, choices=DAYS_OF_WEEK)
     start_time = models.TimeField()
     end_time = models.TimeField()
+    calories_burned = models.PositiveIntegerField(null=True, blank=True)

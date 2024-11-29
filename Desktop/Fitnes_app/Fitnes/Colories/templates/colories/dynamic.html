@@ -21,7 +21,7 @@
         <a href="{% url 'colory_dynamic' %}?period=month"  class="btn-info" id="lol-btn {% if selected_period == 'month' %}active{% endif %}">Месяц</a>
         <a href="{% url 'colory_dynamic' %}?period=3months"  class="btn-info" id="lol-btn {% if selected_period == '3months' %}active{% endif %}">3 месяца</a>
     </div>
-
+    <div></div>
     <div id="calories-burned-chart-container" {% if selected_period != 'training' %}style="display: none;"{% endif %}> 
     </div>
     <div id="calories-chart-container" {% if selected_period != 'calories' %}style="display: none;"{% endif %}>
