@@ -39,6 +39,18 @@
                                 <button type="button" class="btn btn-danger remove-form">Удалить</button>
                             </div>
                         {% endfor %}
+                        <div id="empty-form-template" style="display: none;">  <!-- Скрытый шаблон -->
+                            <div class="formset-item">
+                                {{ formset.empty_form.id }}
+                                {{ formset.empty_form.non_field_errors }}
+                                <p>День недели</p>{{ formset.empty_form.day_of_week.label_tag }} {{ formset.empty_form.day_of_week }}
+                                <p>Время начала</p>{{ formset.empty_form.start_time.label_tag }} {{ formset.empty_form.start_time }}
+                                <p>Время конца</p>{{ formset.empty_form.end_time.label_tag }} {{ formset.empty_form.end_time }}
+                                {{ formset.empty_form.DELETE|add_class:"hidden-checkbox" }}
+                                <button type="button" class="btn btn-danger remove-form">Удалить</button>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="button-wrapper">
                         <button type="button" class="btn btn-primary" id="add-form">Добавить тренировку</button>
@@ -64,21 +76,24 @@
     var addFormButton = document.getElementById('add-form');
     var totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
 
+
+    var emptyFormTemplate = document.getElementById('empty-form-template').firstElementChild;   
+    
     addFormButton.addEventListener('click', function() {
-        var newForm = formsetContainer.querySelectorAll('.formset-item')[0].cloneNode(true);
-        var formRegex = new RegExp('form-(\\d+)-', 'g');
         var formCount = formsetContainer.querySelectorAll('.formset-item').length;
+        var newForm = emptyFormTemplate.cloneNode(true);
+        var formRegex = new RegExp('form-(\\d+|__prefix__)-', 'g');
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, 'form-' + formCount + '-');
 
         newForm.querySelectorAll('input, select').forEach(function(input) {
-            input.value = '';
-            if (input.name.includes('DELETE')) {
+            input.value = ''; //очищаем value
+            if (input.type === 'checkbox'){
                 input.checked = false;
             }
         });
-
+        newForm.style.display = 'block';
         formsetContainer.appendChild(newForm);
-        totalFormsInput.value = parseInt(totalFormsInput.value) + 1;
+        totalFormsInput.value = formCount + 1;
 
         attachRemoveButtonHandlers();
     });
