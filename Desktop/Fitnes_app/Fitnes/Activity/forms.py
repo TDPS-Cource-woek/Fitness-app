@@ -7,7 +7,9 @@ from Activity.models import TrainingSession, Exercise
 class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
+        
         fields = ['date', 'title', 'duration', 'link_to_video', 'calories_burned', 'notes']
+        
 
 class TrainingSessionForm(forms.ModelForm):
     day_of_week = forms.ChoiceField(

@@ -6,12 +6,51 @@
 
 <div class="main-container">
     <h2>{{ title }}</h2>
-    <form method="post" class="form-class">
+    <form method="post" class="form-class" id="timetableForm">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
+        <div class="form-group">
+            <label for="id_student">Студент:</label>
+            {{ form.student }}
+        </div>
+        <div class="form-group">
+            <label for="id_day_of_week">День недели:</label>
+             {{ form.day_of_week }}
+        </div>
+        <div class="form-group">
+            <label for="id_start_time">Время начала:</label>
+            {{ form.start_time }}
+        </div>
+        <div class="form-group">
+            <label for="id_end_time">Время окончания:</label>
+            {{ form.end_time }}
+        </div>
+        <div class="form-group">
+            <label for="id_calories_burned">Кол-во калорий:</label>
+             {{ form.calories_burned }}
+        </div>
+        <button type="submit" class="button" onclick="return validateTime();">Сохранить</button>
         <a class="return-button" href="{% url 'timetable_list' %}">Назад к списку</a>
     </form>
-    
 </div>
+
+<script>
+    function validateTime() {
+        const startTimeInput = document.getElementById('id_start_time');
+        const endTimeInput = document.getElementById('id_end_time');
+
+        const startTime = startTimeInput.value;
+        const endTime = endTimeInput.value;
+
+        if (!startTime || !endTime) {
+            alert('Пожалуйста, выберите время начала и окончания.');
+            return false; // Не отправлять форму, если время не выбрано
+        }
+
+        if (startTime >= endTime) {
+            alert('Время начала должно быть меньше времени окончания.');
+            return false; // Не отправлять форму, если время неверное
+        }
+        return true
+    }
+</script>
 {% endblock %}

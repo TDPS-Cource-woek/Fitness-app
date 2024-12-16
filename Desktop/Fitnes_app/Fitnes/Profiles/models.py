@@ -48,7 +48,6 @@ class UserCaloryProfile(models.Model):
         profile = cls.objects.get(user__username=user_name)
         return profile.daily_calorie_needs
 
-
 class Profile(models.Model):
     USER_TYPE_CHOICES = [
         ('user', 'User'),
@@ -74,7 +73,6 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Profile'
         verbose_name_plural = 'Profiles'
-
 
 class ProfileManager(models.Manager):
     def get_by_type(self, user_type):

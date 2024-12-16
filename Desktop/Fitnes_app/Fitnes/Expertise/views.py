@@ -44,7 +44,7 @@ def expert_timetable_list(request):
         'title': 'Расписание тренера',
         'timetables': timetables,
         'expert': expert,
-        'timetable_data_json': json.dumps(timetable_data), # Pass data as JSON
+        'timetable_data_json': json.dumps(timetable_data), 
     }
     return render(request, 'expertise/expert_timetable_list.html', context)
 

@@ -98,7 +98,7 @@
                     <div class="description">{{ achievement.description }}</div>
                     <div class="progress-bar-container">
                       {% with achievement.progress as progress %}
-                        <div class="progress-bar" style="width: {{ progress }}%;"></div>
+                        <div class="progress-bar" style="width: {{ progress }}%"></div>
                       {% endwith %}
                     </div>
                     <div class="status">{{ achievement.status }}</div>
@@ -108,7 +108,7 @@
                     </div>
                   </div>
                   <div class="wrapper-img">
-                    <img class="progress-img" src="{% static 'main/img/' %}/{{ achievement.icon }}" alt="{{ achievement.title }}"/>
+                    <img class="progress-img" src="{% static 'main/img/' %}/{{ achievement.icon }}Fitnes\Main\static\main\img\tag11.png" alt="{{ achievement.title }}"/>
                   </div>
                 {% endif %}
                 {% if achievement.completed and not achievement.claimed %}

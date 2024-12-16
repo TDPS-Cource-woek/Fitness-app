@@ -10,35 +10,59 @@
 <body>
     <div class="page-wrapper">
         <div class="container-log">
-                    <form method="post" class="edit-form">
-                        <div class="text-wrapper">
-                            <h2>Создать цель</h2>
+            <form method="post" class="edit-form" id="goalForm">
+                <div class="text-wrapper">
+                    <h2>Создать цель</h2>
+                </div>
+                <div class="field-container">
+                    {% csrf_token %}
+                    <div class="first-container">
+                        <div class="first-first-container">
+                            {{ form.description }}
                         </div>
-                        <div class="field-container">
-                            {% csrf_token %}
-                            <div class="first-container">
-                                <div class="first-first-container">
-                                  {{ form.description }}
-                                </div>
-                                <div class="first-second-container"> 
-                                  {{ form.start_date }}
-                                  {{ form.end_date }}
-                                </div>
-                            </div>
-                            <div class="second-container">
-                                <div class="second-first-container">
-                                  {{ form.target_weight }}
-                                  {{ form.start_weight }}
-                                </div>
-                                <div class="button-wrapper"><button type="submit">Сохранить информацию</button></div>
-                            </div>
+                        <div class="first-second-container">
+                            {{ form.start_date }}
+                            {{ form.end_date }}
                         </div>
-                        <a class="btn btn-light" href="{% url 'index-progress' %}">Вернуться</a>
-                    </form>
-                    
+                    </div>
+                    <div class="second-container">
+                        <div class="second-first-container">
+                            {{ form.target_weight }}
+                            {{ form.start_weight }}
+                        </div>
+                        <div class="button-wrapper">
+                            <button type="submit" onclick="return validateWeight()">Сохранить информацию</button>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-light" href="{% url 'index-progress' %}">Вернуться</a>
+            </form>
         </div>
     </div>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script>
+        function validateWeight() {
+            const targetWeightInput = document.getElementById('id_target_weight');
+            const startWeightInput = document.getElementById('id_start_weight');
+
+            const targetWeight = parseFloat(targetWeightInput.value);
+            const startWeight = parseFloat(startWeightInput.value);
+
+            if (isNaN(targetWeight) || targetWeight < 0) {
+                alert('Целевой вес должен быть неотрицательным числом.');
+                return false;
+            }
+
+            if (isNaN(startWeight) || startWeight < 0) {
+                 alert('Начальный вес должен быть неотрицательным числом.');
+                return false;
+             }
+            return true;
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
 </body>
